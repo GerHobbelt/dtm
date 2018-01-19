@@ -32,6 +32,10 @@ DEFINE_int32(heldout_time,
 	     -1,
 	     "A time up to (but not including) which we wish to train, "
 	     "and at which we wish to test.");
+DEFINE_int32(min_time,
+             0,
+             "The time at which to begin training. "
+             "Times prior to this are excluded from training.");
 DEFINE_string(output_table, "", "");
 DEFINE_string(params_file,
 	      "settings.txt",
@@ -117,21 +121,27 @@ void fit_dtm(int min_time, int max_time)
     corpus_seq_t* data_full = read_corpus_seq(FLAGS_corpus_prefix.c_str());
 
     corpus_seq_t* data_subset;
-    if (max_time >= 0) {
+    if (max_time >= 0 || min_time > 0) {
       // We are training on a subset of the data.
-      assert(max_time > min_time
-	     && min_time >= 0
-	     && max_time < data_full->len);
+      assert(min_time >= 0 && min_time < data_full->len);
+      int max_time_subset;
+      if (max_time == -1) {
+        max_time_subset = data_full->len;
+      } else {
+        assert(max_time > min_time
+               && max_time < data_full->len);
+        max_time_subset = max_time;
+      }
       data_subset = (corpus_seq_t*) malloc(sizeof(corpus_seq_t));
-      data_subset->len = max_time - min_time;
+      data_subset->len = max_time_subset - min_time;
       data_subset->nterms = data_full->nterms;
       data_subset->corpus = (corpus_t**) malloc(
         sizeof(corpus_t*) * data_subset->len);
       int ndocs = 0;
-      for (int i=min_time; i < max_time; ++i) {
-	corpus_t* corpus = data_full->corpus[i];
-	data_subset->corpus[i - min_time] = corpus;
-	ndocs += corpus->ndocs;
+      for (int i=min_time; i < max_time_subset; ++i) {
+        corpus_t* corpus = data_full->corpus[i];
+        data_subset->corpus[i - min_time] = corpus;
+        ndocs += corpus->ndocs;
       }
       data_subset->max_nterms = compute_max_nterms(data_subset);
       data_subset->ndocs = ndocs;
@@ -159,7 +169,7 @@ void fit_dtm(int min_time, int max_time)
     // Now find the posterior likelihood of the next time slice
     // using the most-recently-known time slice.
     lda* lda_model = new_lda_model(model_seq->ntopics, model_seq->nterms);
-    make_lda_from_seq_slice(lda_model, model_seq, max_time - 1);
+    make_lda_from_seq_slice(lda_model, model_seq, max_time - min_time - 1);
 
     lda_post post;
     int max_nterms = compute_max_nterms(data_full);
@@ -224,7 +234,7 @@ int main(int argc, char* argv[])
     // mode for fitting a dynamic topic model
 
     if (FLAGS_mode == "fit") {
-      fit_dtm(0, FLAGS_heldout_time);
+      fit_dtm(FLAGS_min_time, FLAGS_heldout_time);
     }
 
     // mode for analyzing documents through time according to a DTM
