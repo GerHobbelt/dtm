@@ -35,7 +35,7 @@
 #include "data.h"
 #include "lda.h"
 
-#define LDA_SEQ_EM_THRESHOLD 1e-5;
+#define LDA_SEQ_EM_THRESHOLD 1e-4;
 
 // lda sequence variational posterior distribution
 
