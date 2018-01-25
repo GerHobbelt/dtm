@@ -16,7 +16,7 @@
 #include "gsl-wrappers.h"
 #include "lda.h"
 
-#define LDA_SEQ_EM_THRESH 1e-4
+#define LDA_SEQ_EM_THRESH 1e-6
 #define SAVE_LAG 10
 
 /*
@@ -35,7 +35,7 @@
 #include "data.h"
 #include "lda.h"
 
-#define LDA_SEQ_EM_THRESHOLD 1e-4;
+#define LDA_SEQ_EM_THRESHOLD 1e-6
 
 // lda sequence variational posterior distribution
 
