@@ -9,7 +9,7 @@
 
 #include <gflags/gflags.h>
 
-
+#define PI 3.141592653589793
 
 #include "data.h"
 
@@ -373,13 +373,14 @@ double* NewScaledInfluence(int size) {
   double lognormal_sigma_squared = log(tmp);
   double lognormal_mu = (log(scaled_influence_mean)
 			 - 0.5 * lognormal_sigma_squared);
+  double halfTimeframe = (1.0 / FLAGS_time_resolution) / 2;
   printf("Median: %.2f\n", exp(lognormal_mu));
   for (int i = 0; i < size; ++i) {
     // Shift right by half a timeframe to avoid corner cases.
-    double x = (i / FLAGS_time_resolution) + (1.0 / FLAGS_time_resolution) / 2;
+    double x = (i / FLAGS_time_resolution) + halfTimeframe;
     double tmp2 = (log(x) - lognormal_mu);
     scaled_influence[i] = (1.0
-		      / (x * sqrt(lognormal_sigma_squared * 2 * 3.1415926))
+		      / (x * sqrt(lognormal_sigma_squared * 2 * PI))
 		      * exp(-tmp2 * tmp2
 			    / (2.0
 			       * lognormal_sigma_squared)));
