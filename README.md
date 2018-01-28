@@ -41,22 +41,25 @@ USA
 A. COMPILING
 
 You will need to have several libraries installed to compile this
-package.  One of these is gsl-devel.  Depending on your package
-manager, you may be able to install this with *one* of the following
-commands:
+package:
+	gsl
+	gflags
 
-  sudo aptitude install libgsl0-dev # Ubuntu 10.04
-  sudo zypper install gsl-devel     # OpenSUSE 11.2
-  sudo yum install gsl-devel        # CentOS 5.5
+Depending on your package manager, you may be able to install these
+ with *one* of the following commands:
+
+  sudo apt-get install libgsl0-dev libgflags-dev # Ubuntu, Debian
+  sudo zypper install gflags-devel gsl-devel     # OpenSUSE
+  sudo dnf install gflags-devel gsl-devel        # Fedora, CentOS
 
 You can make the main program by changing your working directory to
 dtm/ and typing:
 
   make
 
-This software has been compiled on Ubuntu 10.04, OpenSUSE 11.2, and
-CentOS 5.5.  Depending on your environment, you may need to install
-additional libraries.
+This software has been compiled on Ubuntu 10.04, OpenSUSE 11.2,
+CentOS 5.5, and Fedora 27. Depending on your environment, you may need to
+install additional libraries.
 
 B. RUNNING
 
@@ -69,6 +72,11 @@ by typing
   ./main --help
 
 (although we suggest you start out with the example in dtm/sample.sh).
+
+You should also replace 'main' by the appropriate executable (depending
+on your computer architecture and operating system). We currently
+provide binaries for Linux (dtm-linux32 and dtm-linux64), MacOS (dtm-darwin64)
+and Windows (dtm-win32.exe and dtm-win64.exe).
 
 C. SUPPORT and QUESTIONS
 
