@@ -220,7 +220,7 @@ void fit_dtm(int min_time, int max_time)
         max_time_subset = max_time;
       }
       data_subset = (corpus_seq_t*) malloc(sizeof(corpus_seq_t));
-      data_subset->len = max_time_subset - min_time;
+      data_subset->len = max_time_subset - min_time + 1;
       data_subset->nterms = data_full->nterms;
       data_subset->corpus = (corpus_t**) malloc(
         sizeof(corpus_t*) * data_subset->len);
@@ -321,7 +321,7 @@ int main(int argc, char* argv[])
     // mode for fitting a dynamic topic model
 
     if (FLAGS_mode == "fit") {
-      fit_dtm(FLAGS_min_time, FLAGS_heldout_time);
+      fit_dtm(FLAGS_min_time, FLAGS_heldout_time - 1);
     }
 
     // mode for analyzing documents through time according to a DTM
