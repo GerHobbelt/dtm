@@ -32,6 +32,7 @@ make main \
 	CCC=g++ \
 	CXX=g++ \
 	AS=as \
+	OPTFLAGS="-O2 -Wl,-static -static-libgcc" \
 	CFLAGS="-m32" \
 	CXXFLAGS="-m32" \
 	OUTPUT_FILE="dtm-linux32"
@@ -44,6 +45,7 @@ make main \
 	CCC=g++ \
 	CXX=g++ \
 	AS=as \
+	OPTFLAGS="-O2 -Wl,-static -static-libgcc" \
 	OUTPUT_FILE="dtm-linux64"
 
 # Remember to remove the dynamic libraries from the libdir when compiling
