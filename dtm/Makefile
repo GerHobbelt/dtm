@@ -7,7 +7,7 @@ OPTFLAGS ?= -O2
 STRIP ?= strip
 CXXFLAGS += -I ${LIB} -I ${LIB}/math -I ${GSLWRAP_LIB}/include -I ${GSLWRAP_LIB}/include/gslwrap 
 
-LDFLAGS += -lgsl -lm -lgslcblas -lgflags
+LDFLAGS += -lgsl -lm -lgslcblas -lgflags -lpthread
 EXTRA_LDFLAGS = 
 LOBJECTS = ss-lm.o gsl-wrappers.o data.o param.o util.o lda-seq.o lda.o params.o main.o
 
