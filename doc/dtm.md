@@ -1,21 +1,21 @@
-\ section {Dynamic Topic Model (DTM)}
+\section {Dynamic Topic Model (DTM)}
 
 
-\ subsection {Input data format}
+\subsection {Input data format}
 
-The \ srccode {dtm} tool requires at least two input files:
+The \srccode {dtm} tool requires at least two input files:
 one for the description of each document and its respective terms and another
 to identify the time slices to be analyzed.
 
-The first file, usually defined with the name \ srccode {??? - mult.dat},
+The first file, usually defined with the name \srccode {??? - mult.dat},
 contains M lines, where M is the number of documents to be analyzed.
 Documents must be ordered by date, in ascending order.
 Each line describes a document, its terms and the quantity of each
 term in the document, according to the following format:
 
-\ begin {lstlisting}
+\begin{lstlisting}
 unique_word_count index1: count1 index2: count2 ... indexn: counnt
-\ end {lstlisting}
+\end{lstlisting}
 
 There is no identifier for the document: the line number is used
 for this purpose. The terms that make up the document are also not declared
@@ -27,11 +27,11 @@ in the current row document. Finally, the first element of the line indicates
 the size of the vocabulary needed to describe the document (see this
 as a facilitator to read the remaining line data).
 
-For example, consider documents from \ cref {}. Their definition in the format
-DTM is presented at \ cref {}. Note that for the second document, some
+For example, consider documents from \cref{}. Their definition in the format
+DTM is presented at \cref{}. Note that for the second document, some
 terms that had already been used to specify the first document,
-appeared. Therefore, the index that identifies the term is the same (\ eg {], 3, 9 and 14},
-although the count is particular to each document (\ eg {}, the term 3 appeared
+appeared. Therefore, the index that identifies the term is the same (\eg{, 3, 9 and 14},
+although the count is particular to each document (\eg{}, the term 3 appeared
 3 times in the first document and only 1 time in the second document).
 
 \ begin {figure}
