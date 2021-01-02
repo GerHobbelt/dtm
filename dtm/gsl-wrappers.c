@@ -106,7 +106,7 @@ void vct_printf(const gsl_vector * v)
 {
     int i;
     for (i = 0; i < v->size; i++)
-	printf("%5.5f ", vget(v, i));
+	printf("%17.10f ", vget(v, i));
     printf("\n\n");
 }
 
@@ -122,7 +122,7 @@ void mtx_printf(const gsl_matrix * m)
     for (i = 0; i < m->size1; i++)
     {
 	for (j = 0; j < m->size2; j++)
-	    printf("%5.5f ", mget(m, i, j));
+	    printf("%17.10f ", mget(m, i, j));
 	printf("\n");
     }
 }
@@ -466,12 +466,12 @@ void optimize_f(int dim,
         f_old = opt->fval;
         status = gsl_multimin_fminimizer_iterate(opt);
         converged = fabs((f_old - opt->fval) / f_old);
-        printf("f = %1.15e; conv = %5.3e; size = %5.3e; niter = %03d\n",
+        printf("f = %1.15e; conv = %17.10e; size = %17.10e; niter = %03d\n",
                opt->fval, converged, opt->size, iter);
     }
     while ((converged > 1e-10) || (iter < 10000));
     // while (status == GSL_CONTINUE);
-    printf("f = %1.15e; conv = %5.3e; niter = %03d\n",
+    printf("f = %1.15e; conv = %17.10e; niter = %03d\n",
            opt->fval, converged, iter);
 
     gsl_multimin_fminimizer_free(opt);

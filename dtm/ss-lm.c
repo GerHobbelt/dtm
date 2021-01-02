@@ -1246,7 +1246,7 @@ double fit_sslm(sslm_var* var, gsl_matrix* counts) {
       printf("Error. Unhandled model %s.\n", FLAGS_model.c_str());
       exit(1);      
     }
-    outlog( "initial sslm bound = %10.5f", bound);
+    outlog( "initial sslm bound = %17.14f", bound);
 
     while ((converged > SSLM_FIT_THRESHOLD) && (iter < SSLM_MAX_ITER)) {
         iter++;
@@ -1261,7 +1261,7 @@ double fit_sslm(sslm_var* var, gsl_matrix* counts) {
 	  exit(1);      
 	}
         converged = fabs((bound - old_bound) / old_bound);
-        outlog( "(%02d) sslm bound = % 10.5f; conv = % 10.5e",
+        outlog( "(%02d) sslm bound = % 17.14f; conv = % 17.14e",
                 iter, bound, converged);
     }
     
