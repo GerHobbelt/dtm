@@ -765,7 +765,7 @@ void param_puti(const char *var_name, int val){
 /*******************************************************/
 void param_putf(const char *var_name, double val){
     param_init_restart();
-    fprintf(restart_unit, "%s = %18.11e;\n", var_name, val);
+    fprintf(restart_unit, "%s = %17.14e;\n", var_name, val);
     fflush(restart_unit);
 }
 
@@ -786,7 +786,7 @@ void param_fwritei(FILE *fp, char *var_name, int val){
 
 /*******************************************************/
 void param_fwritef(FILE *fp, char *var_name, double val){
-    fprintf(fp, "%s = %18.11e;\n", var_name, val);
+    fprintf(fp, "%s = %17.14e;\n", var_name, val);
 }
 
 /*******************************************************/

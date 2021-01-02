@@ -374,7 +374,7 @@ double* NewScaledInfluence(int size) {
   double lognormal_mu = (log(scaled_influence_mean)
 			 - 0.5 * lognormal_sigma_squared);
   double halfTimeframe = (1.0 / FLAGS_time_resolution) / 2;
-  printf("Median: %.2f\n", exp(lognormal_mu));
+  printf("Median: %.14f\n", exp(lognormal_mu));
   for (int i = 0; i < size; ++i) {
     // Shift right by half a timeframe to avoid corner cases.
     double x = (i / FLAGS_time_resolution) + halfTimeframe;

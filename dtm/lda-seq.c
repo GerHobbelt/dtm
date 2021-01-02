@@ -172,7 +172,7 @@ void DumpTimeDocTopicStats(const char* root,
 	}
       }
 
-      fprintf(f, "%d:%d:%.3f", w, max_topic_index, max_topic_weight);
+      fprintf(f, "%d:%d:%17.14f", w, max_topic_index, max_topic_weight);
       
       if (n < doc->nterms - 1) {
 	fprintf(f, " ");
@@ -1051,7 +1051,7 @@ double fit_lda_seq(lda_seq* m, const corpus_seq_t* data,
 	 }
 	 outlog("\nEM iter %3d\n", iter);
 	 outlog("%s", "E step\n");
-	 fprintf(em_log, "%17.14e %5.3e\n", bound, convergence);
+	 fprintf(em_log, "%17.14e %17.14e\n", bound, convergence);
 
 	 old_bound = bound;
 	 gsl_matrix_set_zero(gammas);
@@ -1116,7 +1116,7 @@ double fit_lda_seq(lda_seq* m, const corpus_seq_t* data,
             if (LDA_INFERENCE_MAX_ITER == 10)
                 LDA_INFERENCE_MAX_ITER = 20;
 
-            outlog( "\nWARNING: bound went down %18.14f; "
+            outlog( "\nWARNING: bound went down %17.14f; "
 		    "increasing var iter to %d\n",
                     bound-old_bound, LDA_INFERENCE_MAX_ITER);
         }
@@ -1130,8 +1130,8 @@ double fit_lda_seq(lda_seq* m, const corpus_seq_t* data,
                    LDA_INFERENCE_MAX_ITER);
             convergence = 1.0;
         }
-        outlog("\n(%02d) lda seq bound=% 15.7f; "
-	       "heldout bound=% 15.7f, conv=% 15.7e\n",
+        outlog("\n(%02d) lda seq bound=% 17.14f; "
+	       "heldout bound=% 17.14f, conv=% 17.14e\n",
                iter, bound, heldout_bound, convergence);
         iter++;
     }
