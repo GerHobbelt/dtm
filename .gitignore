@@ -1,4 +1,7 @@
-dtm/*.o
-dtm/dtm-linux64
-dtm/example/model_run/
-dtm/example/output/
+example/model_run/
+example/output/
+.env
+*ipynb_checkpoints
+*ipynb
+docker
+Makefile
