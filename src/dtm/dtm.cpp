@@ -29,7 +29,7 @@ int FLAGS_rng_seed = 0; // Specifies the random seed.  If 0, seeds pseudo-random
 int FLAGS_fix_topics = 0; // Fix a set of this many topics. This amounts to fixing these  topics' variance at 1e-10. type: int32, default: 0
 int FLAGS_forward_window = 1; // The forward window for deltas. If negative, we use a beta with mean 5. type: int32, default: 1
 int FLAGS_lda_sequence_max_iter = 20; // (The maximum number of iterations.) type: int32, default: 20
-int FLAGS_lda_sequence_min_iter = 1; // (The maximum number of iterations.) type: int32, default: 1
+int FLAGS_lda_sequence_min_iter = 3; // (The maximum number of iterations.) type: int32, default: 1
 std::string FLAGS_normalize_docs = "normalize"; // (Describes how documents's wordcounts are considered for finding influence. Options are "normalize", "none", "occurrence", "log", or "log_norm".) type: string, default: "normalize"
 int FLAGS_save_time = 2147483647; // (Save a specific time.  If -1, save all times.) type: int32, default: 2147483647
 
@@ -38,17 +38,17 @@ double FLAGS_lambda_convergence = 0.01; // (Specifies the level of convergence r
 int FLAGS_lda_inference_max_iter = 25;
 
 // Flags from main.c:
-double FLAGS_alpha = -10; // type: double default: -10
+double FLAGS_alpha = 0.01; // type: double default: 0.01
 std::string FLAGS_corpus_prefix = ""; // The function to perform. Can be dtm or dim. type: string, default: ""
 int FLAGS_end = -1; // type: int32 default: -1
 std::string FLAGS_heldout_corpus_prefix = ""; // type: string default: ""
 int FLAGS_heldout_time = -1; // A time up to (but not including) which we wish to train, and at which we wish to test. type: int32, default: -1
-bool FLAGS_initialize_lda = false; // If true, initialize the model with lda. type: bool, default: false
+bool FLAGS_initialize_lda = true; // If true, initialize the model with lda. type: bool, default: false
 int FLAGS_lda_max_em_iter = 20; // type: int32 default: 20
 std::string FLAGS_lda_model_prefix = ""; // The name of a fit model to be used for testing likelihood.  Appending "info.dat" to this should give the name of the file. type: string, default: ""
 std::string FLAGS_mode = "fit"; // The function to perform. Can be fit, est, or time. type: string, default: "fit"
 std::string FLAGS_model = "dtm"; // The function to perform. Can be dtm or dim. type: string, default: "dtm"
-double FLAGS_ntopics = -1.0; // type: double, default: -1
+double FLAGS_ntopics = 10; // type: double, default: 10
 std::string FLAGS_outname = ""; // type: string, default: ""
 std::string FLAGS_output_table = ""; // type: string default: ""
 std::string FLAGS_params_file = "settings.txt"; // A file containing parameters for this run. type: string, default: "settings.txt"
@@ -58,13 +58,14 @@ double FLAGS_top_obs_var = 0.5; // type: double default: 0.5
 
 
 DTM::DTM(
+    std::string corpus_prefix,
+    std::string outname,
     bool initialize_lda,
     int lda_max_em_iter,
     std::string lda_model_prefix,
     std::string mode,
     std::string model,
     double ntopics,
-    std::string outname,
     std::string output_table,
     std::string params_file,
     int start,
@@ -89,7 +90,6 @@ DTM::DTM(
     int save_time,
     double lambda_convergence,
     double alpha,
-    std::string corpus_prefix,
     int end,
     std::string heldout_corpus_prefix,
     int heldout_time,
