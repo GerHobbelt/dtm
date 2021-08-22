@@ -14,10 +14,12 @@ Reference the `dtmpy.DTM` docstring for all possible keyword arguments.
 import dtmpy
 
 # Initialize DTM model flags
-dtm = dtmpy.DTM(corpus_prefix="model_inputs/file_prefix", outname="model_outputs", ntopics=10)
+dtm = dtmpy.DTM(corpus_prefix="model_inputs/file_prefix", output_name="model_outputs", n_topics=10)
 
-# Fit the model and write outputs
-dtm.fit()
+# Fit the model and write outputs from bag-of-words corpus and timestamps
+dtm.fit(my_corpus, n_docs_per_timestamp)
+
+topic_mixtures = dtm.read_topic_mixtures()
 ```
 
 ## Install
