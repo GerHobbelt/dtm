@@ -3,14 +3,14 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(dtmpy, m) {
+PYBIND11_MODULE(_dtmpy, m) {
     m.doc() = R"pbdoc(
         Module for fitting a Dynamic Topic Model.
 
         Classes:
-            DTM
+            dtm
     )pbdoc";
-    py::class_<DTM>(m, "DTM")
+    py::class_<DTM>(m, "dtm")
     .def(py::init<
         std::string,
         std::string,

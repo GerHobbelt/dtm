@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.7.0)
-project (dtmpy
-    VERSION 0.1.0
-    DESCRIPTION "Python wrapper for dynamic topic modeling"
-    LANGUAGES CXX
-)
+project ("dtmpy")
 
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
 if(EXISTS "${LOC_PATH}")

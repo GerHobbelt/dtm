@@ -1,5 +1,6 @@
 example/model_run/
 example/output/
+__pycache__
 .env
 *ipynb_checkpoints
 *ipynb
