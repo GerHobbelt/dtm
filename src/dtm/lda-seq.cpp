@@ -113,7 +113,7 @@ void DumpTimeDocTopicStats(const char* root,
   char name[400];
   // Dump the top topics for each word.
   sprintf(name, "%s%ld_doc_term_topics.dat", root, t);
-  FILE* f = fopen(name, "w");
+  FILE* f = fopen(name, "a");
   for (unsigned int d=0; d < corpus->ndocs; ++d) {
     gsl_matrix* phi_d = phi[d];
     doc_t* doc = corpus->doc[d];

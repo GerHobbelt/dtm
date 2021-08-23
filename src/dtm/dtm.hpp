@@ -37,7 +37,7 @@ class DTM {
             int fix_topics = 0, // Fix a set of this many topics. This amounts to fixing these  topics' variance at 1e-10. type: int32, default: 0
             int forward_window = 1, // The forward window for deltas. If negative, we use a beta with mean 5. type: int32, default: 1
             int lda_sequence_max_iter = 20, // (The maximum number of iterations.) type: int32, default: 20
-            int lda_sequence_min_iter = 3, // (The maximum number of iterations.) type: int32, default: 1
+            int lda_sequence_min_iter = 1, // (The maximum number of iterations.) type: int32, default: 1
             std::string normalize_docs = "normalize", // (Describes how documents's wordcounts are considered for finding influence. Options are "normalize", "none", "occurrence", "log", or "log_norm".) type: string, default: "normalize"
             int save_time = 2147483647, // (Save a specific time.  If -1, save all times.) type: int32, default: 2147483647
             double lambda_convergence = 0.01, // (Specifies the level of convergence required for lambda in the phi updates.) type: double, default: 0.01

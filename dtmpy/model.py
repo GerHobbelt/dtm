@@ -19,7 +19,7 @@ class DTM:
         initialize_lda: bool = True,
         lda_max_em_iter: int = 20,
         lda_sequence_max_iter: int = 20,
-        lda_sequence_min_iter: int = 3,
+        lda_sequence_min_iter: int = 1,
         lda_inference_max_iter: int = 25,
         top_chain_var: float = 0.005,
         top_obs_var: float = 0.5,

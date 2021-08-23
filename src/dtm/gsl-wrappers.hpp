@@ -20,10 +20,12 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <stdexcept>
+#include <stdarg.h>
 
-#define outlog(format, args...) \
-    fprintf(stderr, format, args); \
-    fprintf(stderr, "\n");
+/* #define outlog(format, args...) \ */
+    /* write_to_log(format, args); */
+
+void outlog(const char *fmt, ...);
 
 double safe_log(double);
 double log_sum(double, double);

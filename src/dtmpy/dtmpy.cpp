@@ -93,7 +93,7 @@ PYBIND11_MODULE(_dtmpy, m) {
            forward_window: The forward window for deltas. If negative, we use a beta with
                mean 5. default: 1
            lda_sequence_max_iter: The maximum number of iterations. default: 20
-           lda_sequence_min_iter: The minimum number of iterations. default: 3
+           lda_sequence_min_iter: The minimum number of iterations. default: 1
            normalize_docs: Describes how documents's wordcounts are considered for finding
                influence. Options are "normalize", "none", "occurrence", "log", or "log_norm".)
                default: "normalize"
@@ -134,7 +134,7 @@ PYBIND11_MODULE(_dtmpy, m) {
             py::arg("fix_topics") = 0,
             py::arg("forward_window") = 1,
             py::arg("lda_sequence_max_iter") = 20,
-            py::arg("lda_sequence_min_iter") = 3,
+            py::arg("lda_sequence_min_iter") = 1,
             py::arg("normalize_docs") = "normalize",
             py::arg("save_time") = 2147483647,
             py::arg("lambda_convergence") = 0.01,

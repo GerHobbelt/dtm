@@ -11,6 +11,19 @@ const double MAX_ITER = 15;
  *
  */
 
+void outlog(const char *fmt, ...){
+    char logfile[400];
+    sprintf(logfile, "%s/log.txt", FLAGS_outname.c_str());
+    FILE* f = fopen(logfile, "a");
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(f, fmt, args);
+    va_end(args);
+    fprintf(f, "\n");
+    fclose(f);
+}
+
+
 double safe_log(double x)
 {
     if (x == 0)
@@ -521,7 +534,7 @@ gsl_rng* new_random_number_generator()
 
     // !!! DEBUG
     // t1 = 1147530551;
-    printf("RANDOM SEED = %ld\n", t1);
+    outlog("RANDOM SEED = %ld", t1);
     gsl_rng_set(random_number_generator, t1);
     return(random_number_generator);
 }

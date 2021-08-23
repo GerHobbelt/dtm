@@ -29,7 +29,7 @@ int FLAGS_rng_seed = 0; // Specifies the random seed.  If 0, seeds pseudo-random
 int FLAGS_fix_topics = 0; // Fix a set of this many topics. This amounts to fixing these  topics' variance at 1e-10. type: int32, default: 0
 int FLAGS_forward_window = 1; // The forward window for deltas. If negative, we use a beta with mean 5. type: int32, default: 1
 int FLAGS_lda_sequence_max_iter = 20; // (The maximum number of iterations.) type: int32, default: 20
-int FLAGS_lda_sequence_min_iter = 3; // (The maximum number of iterations.) type: int32, default: 1
+int FLAGS_lda_sequence_min_iter = 1; // (The maximum number of iterations.) type: int32, default: 1
 std::string FLAGS_normalize_docs = "normalize"; // (Describes how documents's wordcounts are considered for finding influence. Options are "normalize", "none", "occurrence", "log", or "log_norm".) type: string, default: "normalize"
 int FLAGS_save_time = 2147483647; // (Save a specific time.  If -1, save all times.) type: int32, default: 2147483647
 
@@ -153,7 +153,7 @@ void DTM::fit() {
                 for (d = 0; d < c->corpus[t]->ndocs; d++) {
                     sum += c->corpus[t]->doc[d]->total;
                 }
-                printf("%d\n\n", sum);
+                outlog("%d\n\n", sum);
             }
         }
 
@@ -242,7 +242,7 @@ void DTM::fit_dtm(int min_time, int max_time)
     // initialize (a few iterations of LDA fitting)
     outlog("%s","### INITIALIZING MODEL FROM LDA ###\n");
 
-    printf("data file: %s\n", FLAGS_corpus_prefix.c_str());
+    outlog("data file: %s\n", FLAGS_corpus_prefix.c_str());
     corpus_t* initial_lda_data = read_corpus(FLAGS_corpus_prefix.c_str());
 
     gsl_matrix* topics_ss;
@@ -265,13 +265,13 @@ void DTM::fit_dtm(int min_time, int max_time)
       write_lda_suff_stats(lda_ss, name);
       topics_ss = lda_ss->topics_ss;
     } else {
-      printf("loading %d terms..\n", initial_lda_data->nterms);
+      outlog("loading %d terms..\n", initial_lda_data->nterms);
       topics_ss = gsl_matrix_calloc(initial_lda_data->nterms, FLAGS_ntopics);
       sprintf(name, "%s/initial-lda-ss.dat", FLAGS_outname.c_str());
       mtx_fscanf(name, topics_ss);
     }
 
-    printf("fitting.. \n");
+    fprintf(stderr, "fitting.. \n");
     // estimate dynamic topic model
 
     outlog("\n%s\n","### FITTING DYNAMIC TOPIC MODEL ###");
