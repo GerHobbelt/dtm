@@ -11,19 +11,6 @@ const double MAX_ITER = 15;
  *
  */
 
-void outlog(const char *fmt, ...){
-    char logfile[400];
-    sprintf(logfile, "%s/log.txt", FLAGS_outname.c_str());
-    FILE* f = fopen(logfile, "a");
-    va_list args;
-    va_start(args, fmt);
-    vfprintf(f, fmt, args);
-    va_end(args);
-    fprintf(f, "\n");
-    fclose(f);
-}
-
-
 double safe_log(double x)
 {
     if (x == 0)
@@ -147,7 +134,7 @@ void vct_fscanf(const char* filename, gsl_vector* v)
     FILE* fileptr;
     if (!fileptr) {
       outlog("Error opening file %s. Failing.", filename);
-      throw std::runtime_error("Error opening file in vct_fscanf. Failing.");
+      error("Error opening file in vct_fscanf. Failing.");
     }
     fileptr = fopen(filename, "r");
     gsl_vector_fscanf(fileptr, v);
@@ -162,7 +149,7 @@ void mtx_fscanf(const char* filename, gsl_matrix * m)
            m->size1, m->size2, filename);
     if (!fileptr) {
       outlog("Error opening file %s. Failing.", filename);
-      throw std::runtime_error("Error opening file in mtx_fscanf. Failing.");
+      error("Error opening file in mtx_fscanf. Failing.");
     }
 
     gsl_matrix_fscanf(fileptr, m);
@@ -176,7 +163,7 @@ void vct_fprintf(const char* filename, gsl_vector* v)
     fileptr = fopen(filename, "w");
     if (!fileptr) {
       outlog("Error opening file %s. Failing.", filename);
-      throw std::runtime_error("Error opening file in vct_fprintf. Failing.");
+      error("Error opening file in vct_fprintf. Failing.");
     }
     gsl_vector_fprintf(fileptr, v, "%20.17e");
     fclose(fileptr);
@@ -191,7 +178,7 @@ void mtx_fprintf(const char* filename, const gsl_matrix * m)
     fileptr = fopen(filename, "w");
     if (!fileptr) {
       outlog("Error opening file: %s", filename);
-      throw std::runtime_error("Error opening file in mtx_fprintf");
+      error("Error opening file in mtx_fprintf");
     }
     gsl_matrix_fprintf(fileptr, m, "%20.17e");
     fclose(fileptr);

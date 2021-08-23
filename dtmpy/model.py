@@ -64,7 +64,7 @@ class DTM:
                 inference model ("dim").
             initialize_lda: If true, initialize the DTM model with an LDA
                 model.
-            lda_max_em_iter: Max iterations for computing LDA.
+            lda_max_em_iter: Max iterations for LDA initialization.
             lda_sequence_max_iter: The maximum number of iterations used for
                 fitting DTM.
             lda_sequence_min_iter: The minimum number of iterations used for
@@ -100,13 +100,13 @@ class DTM:
             heldout_time: A time up to (but not including) which we wish to
                 train, and at which we wish to test.
             params_file: A file containing parameters for this run.
-            sigma_c: c stdev
-            sigma_cv: variational c stdev
-            sigma_d: d stdev
-            sigma_l: l stdev
-            output_table: Unkown DTM input parameter.
-            start: Unknown DTM input parameter.
-            end: Unknown DTM input parameter.
+            sigma_c: Undocumented DTM input parameter.
+            sigma_cv: Undocumented DTM input parameter.
+            sigma_d: Undocumented DTM input parameter.
+            sigma_l: Undocumented DTM input parameter.
+            output_table: Undocumented DTM input parameter.
+            start: Undocumented DTM input parameter.
+            end: Undocumented DTM input parameter.
         """
         self.corpus_prefix = corpus_prefix
         self.corpus_path = Path(self.corpus_prefix).parent

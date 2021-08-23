@@ -38,22 +38,36 @@ static int space_in_use=0;
 static int pointers_in_use=0;
 int    display_allocs=FALSE;
 
+void init_log() {
+    char logfile[400];
+    sprintf(logfile, "%s/log.txt", FLAGS_outname.c_str());
+    FILE* f = fopen(logfile, "w");
+    fprintf(f, "### RUNNING DTM ###\n\n");
+    fclose(f);
+}
 
-void error(const char *fmt, ...){
+void outlog(const char *fmt, ...){
+    char logfile[400];
+    sprintf(logfile, "%s/log.txt", FLAGS_outname.c_str());
+    FILE* f = fopen(logfile, "a");
     va_list args;
     va_start(args, fmt);
-    vfprintf(stderr, fmt, args); CRLF;
+    vfprintf(f, fmt, args);
     va_end(args);
-    fprintf(stderr, "\n");
-    if (errno > 0) {
-        perror(buf);
-        fprintf(stderr, "errno=%d\n", errno);
-        fprintf(stderr, buf);
-      fprintf(stderr, "\n");
-    }
+    fprintf(f, "\n");
+    fclose(f);
+}
+
+void error(const char *fmt, ...){
+    char errmsg[1024];
+    va_list args;
+    va_start(args, fmt);
+    vsprintf(errmsg, fmt, args);
+    va_end(args);
+    outlog(errmsg);
     fflush(stderr);
     fflush(stdout);
-    assert(0);
+    throw std::runtime_error(errmsg);
 }
 
 const char *dequote (const char *s) {

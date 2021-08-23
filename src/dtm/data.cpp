@@ -80,7 +80,7 @@ corpus_t* read_corpus(const char* name)
     if (fileptr == NULL) {
       outlog("Error reading corpus prefix %s. Failing.",
 	     filename);
-      throw std::runtime_error("Error reading corpus prefix. Failing.");
+      error("Error reading corpus prefix. Failing.");
     }
     c->ndocs = 0; c->nterms = 0;
     c->doc = (doc_t**) malloc(sizeof(doc_t*));
@@ -142,7 +142,7 @@ corpus_seq_t* read_corpus_seq(const char* name)
     if (!fileptr) {
       outlog("Error opening dtm sequence file %s.\n",
 	     filename);
-      throw std::runtime_error("Error opening dtm sequence file.");
+      error("Error opening dtm sequence file.");
     }
     int tmp = fscanf(fileptr, "%d", &(corpus_seq->len));
     corpus_seq->corpus = (corpus_t**) malloc(sizeof(corpus_t*) * corpus_seq->len);
@@ -166,7 +166,7 @@ corpus_seq_t* read_corpus_seq(const char* name)
 		   doc_idx,
 		   ndocs,
 		   j);
-        throw std::runtime_error("Error: too few documents listed in dtm sequence file");
+        error("Error: too few documents listed in dtm sequence file");
 	  }
 	  //	  outlog("%d %d %d %d\n", i, j, doc_idx, raw_corpus->ndocs);
 	  corpus_seq->corpus[i]->doc[j] = raw_corpus->doc[doc_idx];
@@ -338,7 +338,7 @@ double* NewScaledInfluence(int size) {
   double lognormal_mu = (log(scaled_influence_mean)
 			 - 0.5 * lognormal_sigma_squared);
   double halfTimeframe = (1.0 / FLAGS_time_resolution) / 2;
-  fprintf(stderr, "Median: %.14f\n", exp(lognormal_mu));
+  // fprintf(stderr, "Median: %.14f\n", exp(lognormal_mu));
   for (int i = 0; i < size; ++i) {
     // Shift right by half a timeframe to avoid corner cases.
     double x = (i / FLAGS_time_resolution) + halfTimeframe;

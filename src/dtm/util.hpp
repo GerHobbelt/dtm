@@ -35,6 +35,9 @@ extern void*  util_calloc (int num, int size);
 extern void   util_free (void *p);
 extern int    util_space_in_use (void);
 extern int    util_pointers_in_use (void);
+extern void init_log();
+extern void outlog(const char *fmt, ...);
 extern void error(char const *fmt, ...);
+
 
 #endif

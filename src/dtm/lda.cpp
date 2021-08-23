@@ -63,7 +63,7 @@ double fit_lda_post(int doc_number, int time,
 	} else if (FLAGS_model == "dtm" || var == NULL) {
 	  update_phi(doc_number, time, p, var, g);
 	} else {
-	  throw std::runtime_error("Error. Unhandled model.");
+	  error("Error. Unhandled model.");
 	}
 	// TODO(sgerrish): Remove this.
 	// output_phi(p);
@@ -343,12 +343,13 @@ double lda_e_step(lda* model,
 
     // for each document
 
+    outlog("e-step: processing docs");
     for (d = 0; d < data->ndocs; d++)
     {
-        if (((d % 1000) == 0) && (d > 0))
-        {
-            outlog( "e-step: processing doc %d", d);
-        }
+        // if (((d % 1000) == 0) && (d > 0))
+        // {
+        //     outlog( "e-step: processing doc %d", d);
+        // }
 
         // fit posterior
 
@@ -572,7 +573,7 @@ void lda_em(lda* model,
 	
         m_lhood = lda_m_step(model, ss);
         lhood = e_lhood + m_lhood;
-        converged = (old_lhood - lhood) / (old_lhood);
+        converged = fabs((old_lhood - lhood) / (old_lhood));
         outlog("iter   = %d", iter);
         outlog("lhood  = % 17.14f", lhood);
         outlog("m, e lhood  = % 17.14f, % 17.14f", m_lhood, e_lhood);
@@ -581,5 +582,9 @@ void lda_em(lda* model,
     }
     while (((converged > LDA_EM_CONVERGED) || (iter <= 5))
 	   && (iter < max_iter));
+    if (converged > LDA_EM_CONVERGED) {
+        outlog("warning: LDA e-step failed to converge after %d iterations: % 17.14e > % 17.14e\n",
+                iter, converged, LDA_EM_CONVERGED);
+    }
     write_lda(model, outname);
 }

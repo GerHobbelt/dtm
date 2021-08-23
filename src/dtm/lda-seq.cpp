@@ -934,7 +934,7 @@ double lda_seq_infer(lda_seq* model,
 		&bound);
   } else {
     printf("Error.  Unknown model.\n");
-    throw std::runtime_error("Error. Unknown model.");
+    error("Error. Unknown model.");
   }
 
   gsl_matrix_free(post.phi);
@@ -1088,13 +1088,17 @@ double fit_lda_seq(lda_seq* m, const corpus_seq_t* data,
             FLAGS_lda_inference_max_iter = 500;
             outlog("starting final iterations : max iter = %d\n",
                    FLAGS_lda_inference_max_iter);
-            convergence = 1.0;
         }
         outlog("\n(%02d) lda seq bound=% 17.14f; "
 	       "heldout bound=% 17.14f, conv=% 17.14e\n",
                iter, bound, heldout_bound, convergence);
         iter++;
     }
+    if (convergence > LDA_SEQ_EM_THRESH) {
+        outlog("warning: LDA-seq e-step failed to converge after %d iterations: % 17.14e > % 17.14e\n",
+                iter, convergence, LDA_SEQ_EM_THRESH);
+    }
+    fclose(em_log);
     return(bound);
 }
 
@@ -1155,7 +1159,7 @@ lda_seq* read_lda_seq(const char* root, corpus_seq_t* data) {
   FILE* f = fopen(name, "r");
   if (f == NULL) {
     outlog("Unable to open file %s.  Failing.", name);
-    throw std::runtime_error("Unable to open file.  Failing.");
+    error("Unable to open file.  Failing.");
   }
   params_read_int(f, "NUM_TOPICS", &(model->ntopics));
   params_read_int(f, "NUM_TERMS", &(model->nterms));

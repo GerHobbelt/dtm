@@ -2,6 +2,7 @@
 #define GSL_WRAPPERS_H
 
 #include "flags.hpp"
+#include "util.hpp"
 
 // #include <gsl/gsl_check_range.h>
 #include <gsl/gsl_vector.h>
@@ -24,8 +25,6 @@
 
 /* #define outlog(format, args...) \ */
     /* write_to_log(format, args); */
-
-void outlog(const char *fmt, ...);
 
 double safe_log(double);
 double log_sum(double, double);

@@ -142,6 +142,9 @@ void DTM::fit() {
 
         // usage: main (sums corpus_sequence|fit param|time params)
 
+        // Create empty log file
+        init_log();
+
         // mode for spitting out document sums
         if (FLAGS_mode == "sums") {
 
@@ -153,7 +156,7 @@ void DTM::fit() {
                 for (d = 0; d < c->corpus[t]->ndocs; d++) {
                     sum += c->corpus[t]->doc[d]->total;
                 }
-                outlog("%d\n\n", sum);
+                outlog("%d\n", sum);
             }
         }
 
@@ -223,7 +226,7 @@ void DTM::fit() {
         }
     }
     catch (const char *err) {
-		fprintf(stderr, "Exception occurred: %s", err);
+		outlog("Exception occurred: %s", err);
     }
     return;
 }
@@ -271,7 +274,7 @@ void DTM::fit_dtm(int min_time, int max_time)
       mtx_fscanf(name, topics_ss);
     }
 
-    fprintf(stderr, "fitting.. \n");
+    // fprintf(stderr, "fitting.. \n");
     // estimate dynamic topic model
 
     outlog("\n%s\n","### FITTING DYNAMIC TOPIC MODEL ###");

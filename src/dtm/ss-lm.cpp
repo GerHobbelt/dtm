@@ -1064,7 +1064,7 @@ void df_obs(const gsl_vector *x, void *params, gsl_vector *df) {
 		      df);
   } else {
     printf("Error. Unhandled model %s.\n", FLAGS_model.c_str());
-    throw std::runtime_error("Error. Unhandled model.");
+    error("Error. Unhandled model.");
   }
   
   for (i = 0; i < df->size; i++) {
@@ -1096,7 +1096,7 @@ void fdf_obs(const gsl_vector *x, void *params, double *f, gsl_vector *df)
 			df);
     } else {
       printf("Error. Unhandled model %s.\n", FLAGS_model.c_str());
-      throw std::runtime_error("Error. Unhandled model.");
+      error("Error. Unhandled model.");
     }
 
     for (i = 0; i < df->size; i++) {
@@ -1122,11 +1122,12 @@ void update_obs(gsl_matrix* word_counts,
     params.var = var;
     params.totals = totals;
 
+    outlog("Updating terms.");
     for (w = 0; w < W; w++)
     {
-        if (w % 5000 == 0) {
-	  outlog("Updating term %d", w);
-	}
+        // if (w % 5000 == 0) {
+	    //     outlog("Updating term %d", w);
+	    // }
         w_counts = gsl_matrix_row(word_counts, w).vector;
         if (((w % 500) == 0) && (w > 0))
         {
@@ -1165,7 +1166,7 @@ void update_obs(gsl_matrix* word_counts,
 			   &f_val, &conv_val, &niter);
 	    } else {
 	      printf("Error. Unhandled model %s.\n", FLAGS_model.c_str());
-	      throw std::runtime_error("Error. Unhandled model.");
+	      error("Error. Unhandled model.");
 	    }
 
             runs++;
@@ -1238,7 +1239,7 @@ double fit_sslm(sslm_var* var, gsl_matrix* counts) {
       bound = compute_bound(counts, totals, var);
     } else {
       printf("Error. Unhandled model %s.\n", FLAGS_model.c_str());
-      throw std::runtime_error("Error. Unhandled model.");
+      error("Error. Unhandled model.");
     }
     outlog( "initial sslm bound = %17.14f", bound);
 
@@ -1252,7 +1253,7 @@ double fit_sslm(sslm_var* var, gsl_matrix* counts) {
 	  bound = compute_bound(counts, totals, var);
 	} else {
 	  printf("Error. Unhandled model %s.\n", FLAGS_model.c_str());
-      throw std::runtime_error("Error. Unhandled model.");
+      error("Error. Unhandled model.");
 	}
         converged = fabs((bound - old_bound) / old_bound);
         outlog( "(%02d) sslm bound = % 17.14f; conv = % 17.14e",
