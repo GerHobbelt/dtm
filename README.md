@@ -182,7 +182,8 @@ b[2, 5]
 - Added Python bindings to `DTM` class using `pybind11`
 - Better error handling to prevent commands like `exit` from crashing the Python kernel
 - Better use of `const` to limit number of compiler warnings
-- Changed some useful outputs for monitoring model fitting convergence to redirect to a `log.txt` file in the output directory rather than `stderr`.
+- Changed some useful outputs for monitoring model fitting convergence to redirect to a `log.txt` file in the output directory rather than `stderr`
+- Fixed bug that made LDA initialization finish before converging or reaching its max iteration
 - More sane defaults:
   - changed `corpus_prefix` and `outname` to be required arguments
   - changed `ntopics` from -1.0 to 10
