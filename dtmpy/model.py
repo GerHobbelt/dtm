@@ -230,7 +230,7 @@ class DTM:
         self.corpus_path = Path(self.corpus_prefix).parent
         self.output_path = f"{self.corpus_path}/{output_name}"
         model_info = self.read_model_info()
-        self.n_topics = model_info["n_topics"]
+        self.n_topics = model_info["num_topics"]
         self.n_time_slices = model_info["seq_length"]
         self._model_fit = True
 
