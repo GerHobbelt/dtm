@@ -14,6 +14,7 @@
 #include "gsl-wrappers.hpp"
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstring>
 #include <gsl/gsl_vector.h>
 
 void params_read_string(FILE* f, char const * name, char const * x);

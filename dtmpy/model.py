@@ -149,6 +149,10 @@ class DTM:
         self._input_init = False
         self._model_fit = False
 
+        # Create output directory if it does not exist
+        if not Path(self.output_path).is_dir():
+            Path(self.output_path).mkdir(parents=True, exist_ok=True)
+
     def read_corpus(self, corpus_prefix: Optional[str] = None):
         """Create bow_corpus and time_slices from existing mult and seq input files.
 

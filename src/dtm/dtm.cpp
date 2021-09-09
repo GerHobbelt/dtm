@@ -142,6 +142,13 @@ void DTM::fit() {
 
         // usage: main (sums corpus_sequence|fit param|time params)
 
+        // make the output directory for this fit
+        char run_dir[400];
+        sprintf(run_dir, "%s/", FLAGS_outname.c_str());
+        if (!directory_exist(run_dir)) {
+          make_directory(run_dir);
+        }
+
         // Create empty log file
         init_log();
 
@@ -235,12 +242,8 @@ void DTM::fit_dtm(int min_time, int max_time)
 {
     char name[400];
 
-    // make the directory for this fit
     char run_dir[400];
     sprintf(run_dir, "%s/", FLAGS_outname.c_str());
-    if (!directory_exist(run_dir)) {
-      make_directory(run_dir);
-    }
 
     // initialize (a few iterations of LDA fitting)
     outlog("%s","### INITIALIZING MODEL FROM LDA ###\n");
