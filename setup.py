@@ -4,8 +4,11 @@ import re
 import subprocess
 import sys
 
+from pathlib import Path
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
+
+long_description = (Path(__file__).parent / "README.md").read_text()
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
@@ -124,11 +127,12 @@ class CMakeBuild(build_ext):
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
     name="dtmpy",
-    version="0.0.1",
     author="Jeff Moore",
     author_email="jmoore@manifold.ai",
-    description="Python wrapper for dynamic topic modeling",
-    long_description="",
+    description="Fast Dynamic Topic Modeling with Python",
+    version="0.1.1",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension("_dtmpy")],
     cmdclass={"build_ext": CMakeBuild},
     install_requires=["numpy"],

@@ -48,19 +48,36 @@ dtm.fit(corpus, time_slices)
 
 ## Install
 
-First install the following libraries:
+Install dependencies:
 
+- `cmake`
 - `libgsl-dev`
 - `pybind11-dev`
 
-Then install the package from the files in this repo:
+These can be installed on Ubuntu with:
 
 ```
+apt-get install cmake libgsl-dev pybind11-dev
+```
 
+or on macOS using [Homebrew](https://brew.sh/) with:
+
+```
+brew install cmake gsl pybind11
+```
+
+After installing the dependencies, `dtmpy` can be installed with:
+
+```
+pip install dtmpy
+```
+
+or directly from source:
+
+```
 git clone https://github.com/jeffmm/dtmpy
 cd dtmpy
 pip install .
-
 ```
 
 ## Model inputs
@@ -190,7 +207,9 @@ b[2, 5]
   - changed `alpha` from -10 to 0.01
   - changed `initialize_lda` flag to true
 
-# Dynamic Topic Models and the Document Influence Model
+# About the original Dynamic Topic Model code
+
+## Dynamic Topic Models and the Document Influence Model
 
 This implements topics that change over time (Dynamic Topic Models) and a model of how individual documents predict that change.
 

@@ -7,3 +7,6 @@ __pycache__
 *ipynb
 docker
 Makefile
+build
+dist
+*.egg-info
