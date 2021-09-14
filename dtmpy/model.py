@@ -146,7 +146,6 @@ class DTM:
         self._start = start
         self._end = end
 
-        self._input_init = False
         self._model_fit = False
 
         # Create output directory if it does not exist
@@ -219,7 +218,8 @@ class DTM:
         self._model_fit = True
         return self
 
-    def load(self, corpus_prefix: str, output_name: str):
+    @staticmethod
+    def load(corpus_prefix: str, output_name: str):
         """Load outputs from a previously-fit model.
 
         Args:
@@ -230,13 +230,13 @@ class DTM:
             output_name: Directory name used to write model output files to,
                 relative to corpus_path.
         """
-        self.corpus_prefix = corpus_prefix
-        self.corpus_path = Path(self.corpus_prefix).parent
-        self.output_path = f"{self.corpus_path}/{output_name}"
-        model_info = self.read_model_info()
-        self.n_topics = model_info["num_topics"]
-        self.n_time_slices = model_info["seq_length"]
-        self._model_fit = True
+        m = DTM(corpus_prefix, output_name)
+        model_info = m.read_model_info()
+        m.n_topics = model_info["num_topics"]
+        m.n_time_slices = model_info["seq_length"]
+        m.bow_corpus, m.time_slices = m.read_corpus()
+        m._model_fit = True
+        return m
 
     def _fit_dtm_model(self):
         """Initialize DTM model parameters, run model, and write model outputs."""
@@ -294,7 +294,7 @@ class DTM:
         with open(mult_path, "r") as f:
             for line in f:
                 n_words, *word_counts = line.split()
-                corpus.append([tuple(wc.split(":")) for wc in word_counts])
+                corpus.append([tuple(map(int, wc.split(":"))) for wc in word_counts])
         self.bow_corpus = corpus
 
     def _write_seq_file(self, seq_path: Union[str, Path]) -> None:
