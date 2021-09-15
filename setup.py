@@ -130,7 +130,7 @@ setup(
     author="Jeff Moore",
     author_email="jmoore@manifold.ai",
     description="Fast Dynamic Topic Modeling with Python",
-    version="0.1.1",
+    version="0.1.2",
     long_description=long_description,
     long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension("_dtmpy")],
