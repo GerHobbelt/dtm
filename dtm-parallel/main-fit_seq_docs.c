@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 {
   // Initialize the flag objects.
   //    InitFlags(argc, argv);
-  google::ParseCommandLineFlags(&argc, &argv, 0);
+  gflags::ParseCommandLineFlags(&argc, &argv, 0);
 
   double lhood = fit_lda_seq_sd();
 

@@ -33,7 +33,7 @@ DECLARE_double(alpha);
 int main(int argc, char* argv[]) {
   // Initialize the flag objects.
   //    InitFlags(argc, argv);
-  google::ParseCommandLineFlags(&argc, &argv, 0);
+  gflags::ParseCommandLineFlags(&argc, &argv, 0);
   
   // mode for fitting a dynamic topic model
   double lhood = dtm::fit_lda_seq_st();

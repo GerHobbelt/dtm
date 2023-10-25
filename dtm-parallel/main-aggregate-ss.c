@@ -14,7 +14,7 @@ DEFINE_string(sentinel_filename,
 using namespace dtm;
 
 int main(int argc, char* argv[]) {
-  google::ParseCommandLineFlags(&argc, &argv, 0);
+  gflags::ParseCommandLineFlags(&argc, &argv, 0);
   
   AggregateSuffStats();
   CreateSentinel(FLAGS_sentinel_filename,

@@ -17,7 +17,7 @@ DEFINE_string(outname, "", "");
 using namespace dtm;
 
 int main(int argc, char* argv[]) {
-  google::ParseCommandLineFlags(&argc, &argv, 0);
+  gflags::ParseCommandLineFlags(&argc, &argv, 0);
   
   double l_hood = RunEStep();
 
