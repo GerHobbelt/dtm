@@ -1045,7 +1045,7 @@ double fit_lda_seq(lda_seq* m, const corpus_seq_t* data,
 	    && !last_iter) {
 
 	 if (!(iter < FLAGS_lda_sequence_min_iter ||
-	       ((final_iters_flag == 0 || convergence > LDA_SEQ_EM_THRESH)
+	       (final_iters_flag == 0
 		&& iter <= FLAGS_lda_sequence_max_iter))) {
 	   last_iter = 1;
 	 }

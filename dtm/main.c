@@ -32,6 +32,10 @@ DEFINE_int32(heldout_time,
 	     -1,
 	     "A time up to (but not including) which we wish to train, "
 	     "and at which we wish to test.");
+DEFINE_int32(min_time,
+             0,
+             "The time at which to begin training. "
+             "Times prior to this are excluded from training.");
 DEFINE_string(output_table, "", "");
 DEFINE_string(params_file,
 	      "settings.txt",
@@ -39,6 +43,12 @@ DEFINE_string(params_file,
 DEFINE_bool(initialize_lda,
 	    false,
 	    "If true, initialize the model with lda.");
+
+DEFINE_string(initialize_lda_data, "False", "Data file to train initial LDA on");
+
+DEFINE_string(lda_SS_folder, "False", "Data file with LDA SS");
+
+DEFINE_bool(skip_dtm, false, "If true, just initialize LDA and then test heldout");
 
 DEFINE_string(outname, "", "");
 DEFINE_double(top_obs_var, 0.5, "");
@@ -80,12 +90,21 @@ void fit_dtm(int min_time, int max_time)
     outlog("%s","### INITIALIZING MODEL FROM LDA ###\n");
 
     printf("data file: %s\n", FLAGS_corpus_prefix.c_str());
-    corpus_t* initial_lda_data = read_corpus(FLAGS_corpus_prefix.c_str());
+    corpus_t* initial_lda_data;
+    corpus_t* final_lda_data;
+
+    if(FLAGS_initialize_lda_data == "False") {
+      initial_lda_data = read_corpus(FLAGS_corpus_prefix.c_str());
+      final_lda_data = read_corpus(FLAGS_corpus_prefix.c_str());
+    } else {
+      final_lda_data = read_corpus(FLAGS_corpus_prefix.c_str());
+      initial_lda_data = read_corpus(FLAGS_initialize_lda_data.c_str());
+    }
 
     gsl_matrix* topics_ss;
     // !!! make this an option
     if (FLAGS_initialize_lda) {
-      lda* lda_model = new_lda_model(FLAGS_ntopics, initial_lda_data->nterms);
+      lda* lda_model = new_lda_model(FLAGS_ntopics, final_lda_data->nterms);
       gsl_vector_set_all(lda_model->alpha, FLAGS_alpha);
       
       lda_suff_stats* lda_ss = new_lda_suff_stats(lda_model);
@@ -102,11 +121,83 @@ void fit_dtm(int min_time, int max_time)
       
       write_lda_suff_stats(lda_ss, name);
       topics_ss = lda_ss->topics_ss;
+
+      if(FLAGS_skip_dtm) {
+        if (max_time < 0) {
+          return;
+        }
+
+        corpus_seq_t* data_full = read_corpus_seq(FLAGS_corpus_prefix.c_str());
+
+        corpus_seq_t* data_subset;
+        if (max_time >= 0 || min_time > 0) {
+          // We are training on a subset of the data.
+          assert(min_time >= 0 && min_time < data_full->len);
+          int max_time_subset;
+          if (max_time == -1) {
+            max_time_subset = data_full->len;
+          } else {
+            assert(max_time > min_time
+                   && max_time < data_full->len);
+            max_time_subset = max_time;
+          }
+          data_subset = (corpus_seq_t*) malloc(sizeof(corpus_seq_t));
+          data_subset->len = max_time_subset - min_time;
+          data_subset->nterms = data_full->nterms;
+          data_subset->corpus = (corpus_t**) malloc(
+                                                    sizeof(corpus_t*) * data_subset->len);
+          int ndocs = 0;
+          for (int i=min_time; i < max_time_subset; ++i) {
+            corpus_t* corpus = data_full->corpus[i];
+            data_subset->corpus[i - min_time] = corpus;
+            ndocs += corpus->ndocs;
+          }
+          data_subset->max_nterms = compute_max_nterms(data_subset);
+          data_subset->ndocs = ndocs;
+        } else {
+          // Use the entire dataset.
+          data_subset = data_full;
+        }
+
+        lda_post post;
+        int max_nterms = compute_max_nterms(data_full);
+        post.phi = gsl_matrix_calloc(max_nterms, FLAGS_ntopics);
+        post.log_phi = gsl_matrix_calloc(max_nterms, FLAGS_ntopics);
+        post.gamma = gsl_vector_calloc(FLAGS_ntopics);
+        post.lhood = gsl_vector_calloc(FLAGS_ntopics);
+        post.model = lda_model;
+        post.doc_weight = NULL;
+
+        int d;
+        double* table = (double*) malloc(sizeof(double) * data_full->corpus[max_time]->ndocs);
+
+        for (d = 0; d < data_full->corpus[max_time]->ndocs; d++)
+          {
+            post.doc = data_full->corpus[max_time]->doc[d];
+            table[d] = fit_lda_post(d, max_time, &post, NULL, NULL,
+                                    NULL, NULL, NULL);
+          }
+        char tmp_string[400];
+        sprintf(tmp_string, "%s-heldout_post_%d.dat", FLAGS_outname.c_str(),
+                max_time);
+        FILE* post_file = fopen(tmp_string, "w");
+        for (int d = 0; d < data_full->corpus[max_time]->ndocs; ++d)
+          {
+            fprintf(post_file, "%f\n", table[d]);
+          }
+        return;
+      }
+
     } else {
       printf("loading %d terms..\n", initial_lda_data->nterms);
       topics_ss = gsl_matrix_calloc(initial_lda_data->nterms, FLAGS_ntopics);
-      sprintf(name, "%s/initial-lda-ss.dat", FLAGS_outname.c_str());
-      mtx_fscanf(name, topics_ss);
+      if (FLAGS_lda_SS_folder == "False") {
+        sprintf(name, "%s/initial-lda-ss.dat", FLAGS_outname.c_str());
+        mtx_fscanf(name, topics_ss);
+      } else {
+        sprintf(name, "%s/initial-lda-ss.dat", FLAGS_lda_SS_folder.c_str());
+        mtx_fscanf(name, topics_ss);
+      }
     }
 
     printf("fitting.. \n");
@@ -117,21 +208,27 @@ void fit_dtm(int min_time, int max_time)
     corpus_seq_t* data_full = read_corpus_seq(FLAGS_corpus_prefix.c_str());
 
     corpus_seq_t* data_subset;
-    if (max_time >= 0) {
+    if (max_time >= 0 || min_time > 0) {
       // We are training on a subset of the data.
-      assert(max_time > min_time
-	     && min_time >= 0
-	     && max_time < data_full->len);
+      assert(min_time >= 0 && min_time < data_full->len);
+      int max_time_subset;
+      if (max_time == -1) {
+        max_time_subset = data_full->len;
+      } else {
+        assert(max_time > min_time
+               && max_time < data_full->len);
+        max_time_subset = max_time;
+      }
       data_subset = (corpus_seq_t*) malloc(sizeof(corpus_seq_t));
-      data_subset->len = max_time - min_time;
+      data_subset->len = max_time_subset - min_time;
       data_subset->nterms = data_full->nterms;
       data_subset->corpus = (corpus_t**) malloc(
         sizeof(corpus_t*) * data_subset->len);
       int ndocs = 0;
-      for (int i=min_time; i < max_time; ++i) {
-	corpus_t* corpus = data_full->corpus[i];
-	data_subset->corpus[i - min_time] = corpus;
-	ndocs += corpus->ndocs;
+      for (int i=min_time; i < max_time_subset; ++i) {
+        corpus_t* corpus = data_full->corpus[i];
+        data_subset->corpus[i - min_time] = corpus;
+        ndocs += corpus->ndocs;
       }
       data_subset->max_nterms = compute_max_nterms(data_subset);
       data_subset->ndocs = ndocs;
@@ -159,7 +256,7 @@ void fit_dtm(int min_time, int max_time)
     // Now find the posterior likelihood of the next time slice
     // using the most-recently-known time slice.
     lda* lda_model = new_lda_model(model_seq->ntopics, model_seq->nterms);
-    make_lda_from_seq_slice(lda_model, model_seq, max_time - 1);
+    make_lda_from_seq_slice(lda_model, model_seq, max_time - min_time - 1);
 
     lda_post post;
     int max_nterms = compute_max_nterms(data_full);
@@ -224,7 +321,7 @@ int main(int argc, char* argv[])
     // mode for fitting a dynamic topic model
 
     if (FLAGS_mode == "fit") {
-      fit_dtm(0, FLAGS_heldout_time);
+      fit_dtm(FLAGS_min_time, FLAGS_heldout_time);
     }
 
     // mode for analyzing documents through time according to a DTM
